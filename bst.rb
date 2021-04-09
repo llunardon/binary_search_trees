@@ -7,6 +7,36 @@ class Bst
     array = array.sort.uniq
     @root = build_tree(array, 0, array.length - 1)
   end
+
+  def find(value)
+    curr = @root
+
+    until curr == nil do
+      if curr.value == value
+        return curr
+      elsif curr.value < value
+        curr = curr.right
+      else
+        curr = curr.left
+      end
+    end
+
+    return nil
+  end
+
+  #def insert(value)
+  #  curr = @root
+
+  #  until curr.left == nil || curr.right == nil do
+  #    if curr.value == value
+  #      puts 'Value already in the tree, insertion stopped'
+  #      return curr
+  #    elsif curr.value < value
+  #      curr = curr.right
+
+  #    end
+  #  end
+  #end
 end
 
 def build_tree(array, first, last)
@@ -32,3 +62,5 @@ end
 arr = [1, 2, 3, 3, 4, 5, 6, 7]
 tree = Bst.new(arr)
 pretty_print(tree.root)
+
+p tree.find(10)
