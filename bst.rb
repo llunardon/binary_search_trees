@@ -46,6 +46,51 @@ class Tree
       prev.left = Node.new(value)
     end
   end
+
+  def remove(value)
+    curr = @root
+
+    until curr.value == value do
+      if is_leaf?(curr)
+        puts 'Tried to remove an element that does not exist, method failed'
+        return nil
+      elsif curr.value < value
+        parent = curr #keep track of the parent in case we have to delete the node
+        parent_link = 'right' #keep track of the direction in which we are going
+        curr = curr.right #move along the right direction
+      else
+        parent = curr #same as above, but in the left direction
+        parent_link = 'left'
+        curr = curr.left
+      end
+    end
+
+    unless is_leaf?(curr)
+      if curr.left != nil #if the node is't a leaf and it has a left subtree
+        substitute = max(curr.left) #substitute[0] = maximum node in the left subtree
+        curr.value = substitute[0].value #substitute[1] = parent of substitute[0]
+        substitute[1].right = nil #delete reference to the node
+      else #if the node isn't a leaf but it doesn't have a left subtree
+        substitute = curr.right #same as above, but in the right direction
+        curr.value = substitute.value
+        curr.right = substitute.right
+      end
+    else #if the node is a leaf
+      if parent_link == 'left'
+        parent.left = nil
+      elsif parent_link == 'right'
+        parent.right = nil
+      end
+    end
+  end
+
+  def is_leaf?(node)
+    if node.left == nil && node.right == nil
+      return true
+    else
+      return false
+    end
+  end
 end
 
 def build_tree(array, first, last)
@@ -62,12 +107,34 @@ def build_tree(array, first, last)
   root
 end
 
+def max(node)
+  curr = node
+
+  until curr.right == nil
+    parent = curr
+    curr = curr.right
+  end
+
+  [curr, parent]
+end
+
+def min(node)
+  curr = node
+
+  until curr.left == nil
+    parent = curr
+    curr = curr.left
+  end
+
+  [curr, parent]
+end
+
 def pretty_print(node = @root, prefix = '', is_left = true)
   pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
   puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.value}"
   pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
 end
 
-arr = [1, 2, 3, 3, 4, 5, 6, 7]
+arr = [4.5, 1, 2, 3, 3, 4, 5, 6, 7, 8, 11, 9]
 tree = Tree.new(arr)
 pretty_print(tree.root)
