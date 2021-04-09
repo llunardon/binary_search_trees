@@ -1,6 +1,6 @@
 require_relative 'node.rb'
 
-class Bst
+class Tree
   attr_reader :root
 
   def initialize(array)
@@ -24,19 +24,28 @@ class Bst
     return nil
   end
 
-  #def insert(value)
-  #  curr = @root
+  def insert(value)
+    curr = @root
 
-  #  until curr.left == nil || curr.right == nil do
-  #    if curr.value == value
-  #      puts 'Value already in the tree, insertion stopped'
-  #      return curr
-  #    elsif curr.value < value
-  #      curr = curr.right
+    until curr == nil do
+      if curr.value == value
+        puts 'Value is already in the tree. Insertion stopped'
+        return curr
+      elsif curr.value < value
+        prev = curr
+        curr = curr.right
+      else
+        prev = curr
+        curr = curr.left
+      end
+    end
 
-  #    end
-  #  end
-  #end
+    if prev.value < value
+      prev.right = Node.new(value)
+    else
+      prev.left = Node.new(value)
+    end
+  end
 end
 
 def build_tree(array, first, last)
@@ -60,7 +69,5 @@ def pretty_print(node = @root, prefix = '', is_left = true)
 end
 
 arr = [1, 2, 3, 3, 4, 5, 6, 7]
-tree = Bst.new(arr)
+tree = Tree.new(arr)
 pretty_print(tree.root)
-
-p tree.find(10)
