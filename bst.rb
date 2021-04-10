@@ -29,8 +29,8 @@ class Tree
 
     until curr == nil do
       if curr.value == value
-        puts 'Value is already in the tree. Insertion stopped'
-        return curr
+        puts 'Tried inserting a value that was already present'
+        return 
       elsif curr.value < value
         prev = curr
         curr = curr.right
@@ -52,7 +52,7 @@ class Tree
 
     until curr.value == value do
       if is_leaf?(curr)
-        puts 'Tried to remove an element that does not exist, method failed'
+        puts 'Tried to remove an element that does not exist'
         return nil
       elsif curr.value < value
         parent = curr #keep track of the parent in case we have to delete the node
@@ -82,6 +82,24 @@ class Tree
         parent.right = nil
       end
     end
+  end
+
+  def level_order()
+    curr = @root
+    queue = []
+    visited_nodes = []
+
+    queue.push(curr) #initialize the queue array
+
+    until queue.length == 0 do
+      visited_nodes.push(curr.value) #visit the current node
+      queue.push(curr.left) if curr.left != nil #enque children if they exist
+      queue.push(curr.right) if curr.right != nil
+      queue.shift #deque the visited node
+      curr = queue[0] #visit the next node in line
+    end
+
+    visited_nodes
   end
 
   def is_leaf?(node)
@@ -135,6 +153,8 @@ def pretty_print(node = @root, prefix = '', is_left = true)
   pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
 end
 
-arr = [4.5, 1, 2, 3, 3, 4, 5, 6, 7, 8, 11, 9]
+arr = [4.5, 1, 69, 34, 88, 808, 2, 3, 3, 4, 5, 6, 7, 8, 11, 9]
 tree = Tree.new(arr)
 pretty_print(tree.root)
+
+p tree.level_order
