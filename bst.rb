@@ -24,6 +24,27 @@ class Tree
     return nil
   end
 
+  def depth(node)
+    return nil if node == nil
+
+    curr = @root
+    depth = 0
+
+    until curr == nil do
+      if curr.value == node.value
+        return depth
+      elsif curr.value < node.value
+        curr = curr.right
+        depth += 1
+      else
+        curr = curr.left
+        depth += 1
+      end
+    end
+
+    depth
+  end
+
   def insert(value)
     curr = @root
 
@@ -142,19 +163,20 @@ class Tree
   def height(node)
     return 0 if is_leaf?(node) #base case
 
-    if node.left != nil
-      height_left =  1 + height(node.left) 
-    else
-      height_left = 0
-    end
-
-    if node.right != nil
-      height_right =  1 + height(node.right) 
-    else
-      height_right = 0
-    end
+    node.left != nil ? height_left = 1 + height(node.left) : height_left = 0
+    node.right != nil ? height_right = 1 + height(node.right) : height_left = 0
 
     return [height_left, height_right].max
+  end
+
+  def is_balanced?(node)
+    return (height(node.left) - height(node.right)).abs <= 1
+  end
+
+  def rebalance()
+    arr = level_order.sort.uniq
+
+    @root = build_tree(arr, 0, arr.length - 1)
   end
 
   def is_leaf?(node)
@@ -207,12 +229,3 @@ def pretty_print(node = @root, prefix = '', is_left = true)
   puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.value}"
   pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
 end
-
-arr = [4.5, 1, 69, 34, 88, 1000, 808, 2, 3, 3, 4, 5, 6, 7, 8, 11, 9]
-tree = Tree.new(arr)
-pretty_print(tree.root)
-
-#p tree.inorder(tree.root, [])
-#p tree.preorder(tree.root, [])
-#p tree.postorder(tree.root, [])
-#p tree.height(tree.find(5))
